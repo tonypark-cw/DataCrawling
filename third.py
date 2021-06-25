@@ -4,6 +4,10 @@ import time
 from tkinter import Tk, filedialog
 
 
+today = time.strftime('%Y-%m-%d')
+
+
+
 def crawl_news(keyword='닌텐도 스위치'):
     headers = { 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 11_0_0) AppleWebKit/537.36 \
     (KHTML, like Gecko) Chrome/86.0.4240.272 Whale/2.9.118.16 Safari/537.36'}
@@ -40,7 +44,7 @@ def crawl_news(keyword='닌텐도 스위치'):
                 results['본문'] = clean_article
                 row.append(results)
         i = i + 10
-        if i >= 32:
+        if i > 31:
             break
         time.sleep(3)
     return row
@@ -48,9 +52,9 @@ def crawl_news(keyword='닌텐도 스위치'):
 
 def save_file(datas, file_name):
     with open(file_name, 'a') as f:
-        f.write('{}\t{}\t{}\t{}\t{}\n'.format('페이지', '키워드','제목','본문','URL'))
+        f.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format('페이지', '날짜','키워드','제목','본문','URL'))
         for data in datas:
-            f.write('{}\t{}\t{}\t{}\t{}\n'.format(data['페이지'], data['키워드'],data['제목'],data['본문'],data['URL']))
+            f.write('{}\t{}\t{}\t{}\t{}\t{}\n'.format(data['페이지'], today,data['키워드'],data['제목'],data['본문'],data['URL']))
 
 
 def naming(keyword):
@@ -76,6 +80,5 @@ def open_file():
             print(line, end='')
 
 # open_file()
-
 main()
 
