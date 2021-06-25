@@ -18,6 +18,7 @@ def crawl_news(keyword='닌텐도 스위치'):
 
         trees = html.fromstring(res.content)
         bodies = trees.xpath('//ul[@class="list_news"]/li')
+
         for body in bodies:
             news_title = body.xpath('.//a[@class="news_tit"]/@title')[0]
             try:
@@ -26,11 +27,17 @@ def crawl_news(keyword='닌텐도 스위치'):
                 news_url = ''
             result = news_title.replace('\n', '').replace('\t', '').replace('\r', '').strip()
             results = dict()
+
             if news_url:
                 results['페이지'] = (i//10) + 1
                 results['키워드'] = keyword
                 results['제목'] = result
                 results['URL'] = news_url
+                article = req.get(news_url, headers=headers)
+                a_trees = html.fromstring(article.content)
+                article_contents = a_trees.xpath('//div[@class="_article_body_contents"]/text()[not(ancestor::script)]')
+                clean_article = " ".join(article_contents).replace('\r', '').replace('\t','').replace('\n','').strip()
+                results['본문'] = clean_article
                 row.append(results)
         i = i + 10
         if i >= 32:
@@ -41,9 +48,9 @@ def crawl_news(keyword='닌텐도 스위치'):
 
 def save_file(datas, file_name):
     with open(file_name, 'a') as f:
-        f.write('{}\t{}\t{}\t{}\n'.format('페이지', '키워드','제목','URL'))
+        f.write('{}\t{}\t{}\t{}\t{}\n'.format('페이지', '키워드','제목','본문','URL'))
         for data in datas:
-            f.write('{}\t{}\t{}\t{}\n'.format(data['페이지'], data['키워드'],data['제목'],data['URL']))
+            f.write('{}\t{}\t{}\t{}\t{}\n'.format(data['페이지'], data['키워드'],data['제목'],data['본문'],data['URL']))
 
 
 def naming(keyword):
@@ -52,7 +59,8 @@ def naming(keyword):
 
 
 def main():
-    keywords = ['GPT-3', '인공지능', '텐서플로', '네이버', '카카오','라인','쿠팡','배달의민족']
+    # keywords = ['GPT-3', '인공지능', '텐서플로', '네이버', '카카오','라인','쿠팡','배달의민족']
+    keywords= ['아이폰']
     for keyword in keywords:
         save_file(crawl_news(keyword), naming(keyword))
 
