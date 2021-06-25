@@ -41,9 +41,9 @@ def crawl_news(keyword='닌텐도 스위치'):
 
 def save_file(datas, file_name):
     with open(file_name, 'a') as f:
-        f.write('{}\t{}\t{:100}{}\n'.format('페이지', '키워드','제목','URL'))
+        f.write('{}\t{}\t{}\t{}\n'.format('페이지', '키워드','제목','URL'))
         for data in datas:
-            f.write('{}\t{}\t{:100}{}\n'.format(data['페이지'], data['키워드'],data['제목'],data['URL']))
+            f.write('{}\t{}\t{}\t{}\n'.format(data['페이지'], data['키워드'],data['제목'],data['URL']))
 
 
 def naming(keyword):
